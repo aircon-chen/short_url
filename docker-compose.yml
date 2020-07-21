@@ -1,0 +1,13 @@
+version: '2.0'
+services:
+  web:
+    build: .
+    command: python /code/src/manage.py runserver 0.0.0.0:8000
+    ports:
+      - "80:8000"
+    volumes:
+      - .:/code
+    links:
+      - redis
+  redis:
+    image: redis
