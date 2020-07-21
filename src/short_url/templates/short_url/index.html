@@ -3,13 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <title>Short URL</title>
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js"
+            integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
 </head>
 <body>
-<h1>Input the URL you want to short</h1>
-<form  action="/" method="post">
+
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+{#<h1>Input the URL you want to short</h1>#}
+<form id="short_url_form">
     {% csrf_token %}
     {{ form }}
     <input type="submit" value="Short it">
 </form>
+
+<h3 class="result-block"></h3>
+
+<script>
+    $(function () {
+
+        $('#short_url_form').submit(function (e) {
+            e.preventDefault();
+            $.ajax({
+                type: "POST",
+                url: '/rest/v1/short',
+                data: $(this).serialize(),
+                dataType: 'json',
+                statusCode: {
+                    201: function (data) {
+                        let url = data.encode_url;
+                        $('.result-block').html(`<a href="${url}" target="_blank">${window.location.hostname}/${url}</a>`)
+                    },
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    alert(XMLHttpRequest.status);
+                    alert(XMLHttpRequest.readyState);
+                    alert(textStatus);
+                },
+            });
+        })
+
+    })
+</script>
 </body>
 </html>
