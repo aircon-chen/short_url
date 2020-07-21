@@ -8,6 +8,6 @@ services:
     volumes:
       - .:/code
     links:
-      - redis
-  redis:
-    image: redis
+      - memcached
+  memcached:
+    image: memcached

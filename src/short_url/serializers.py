@@ -10,5 +10,5 @@ class UrlSerializers(serializers.ModelSerializer):
         model = Url
         fields = ('original_url', 'encode_url')
 
-
-
+    def save(self, **kwargs):
+        return super().save(**kwargs)
